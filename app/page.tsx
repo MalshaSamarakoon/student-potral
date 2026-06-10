@@ -24,15 +24,10 @@ const login = async () => {
 
     const data = await res.json();
 
-    if (data.success) {
-      <a
-  href={data.folderUrl}
-  target="_self"
-  rel="noopener noreferrer"
->
-  Open My Folder
-</a>
-    } else {
+if (data.success) {
+  window.location.href = data.folderUrl;
+  return;
+} else {
       setError(data.message || "Invalid credentials");
     }
   } catch (err) {
