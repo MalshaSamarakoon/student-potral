@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import type { CSSProperties } from "react";
 
 export default function LoginPage() {
   const [seatNo, setSeatNo] = useState("");
@@ -15,9 +16,7 @@ export default function LoginPage() {
     try {
       const res = await fetch("/api/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ seatNo, password }),
       });
 
@@ -26,18 +25,15 @@ export default function LoginPage() {
       setLoading(false);
 
       if (data.success) {
-        window.location.href = data.folderUrl;
+        window.open(data.folderUrl, "_blank");
       } else {
         setError(data.message || "Invalid credentials");
       }
-    } catch (err) {
+    } catch {
       setLoading(false);
       setError("Something went wrong");
     }
   };
-
-  console.log("EMAIL:", process.env.GOOGLE_CLIENT_EMAIL);
-console.log("KEY:", process.env.GOOGLE_PRIVATE_KEY?.slice(0, 20));
 
   return (
     <div style={styles.container}>
@@ -69,7 +65,7 @@ console.log("KEY:", process.env.GOOGLE_PRIVATE_KEY?.slice(0, 20));
   );
 }
 
-const styles: any = {
+const styles: Record<string, CSSProperties> = {
   container: {
     height: "100vh",
     display: "flex",
