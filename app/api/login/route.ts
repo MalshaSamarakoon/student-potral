@@ -4,7 +4,9 @@ import { NextResponse } from "next/server";
 const SPREADSHEET_ID = "1u8Ov0NQa4gH25XtfdGCg-QtRha11sjw2kXtzR0xwV7k";
 const SHEET_NAME = "AIPCA";
 
-const normalize = (v: any) => String(v ?? "").trim();
+const normalize = (v: unknown): string => {
+  return String(v ?? "").trim();
+};
 
 export async function POST(req: Request) {
   try {
