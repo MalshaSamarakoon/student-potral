@@ -9,31 +9,32 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const login = async () => {
-    setLoading(true);
-    setError("");
+const login = async () => {
+  setLoading(true);
+  setError("");
 
-    try {
-      const res = await fetch("/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ seatNo, password }),
-      });
+  try {
+    const res = await fetch("/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ seatNo, password }),
+    });
 
-      const data = await res.json();
+    const data = await res.json();
 
-      setLoading(false);
-
-      if (data.success) {
-        window.open(data.folderUrl, "_blank");
-      } else {
-        setError(data.message || "Invalid credentials");
-      }
-    } catch {
-      setLoading(false);
-      setError("Something went wrong");
+    if (data.success) {
+      window.open(data.folderUrl, "_blank");
+    } else {
+      setError(data.message || "Invalid credentials");
     }
-  };
+  } catch (err) {
+    setError("Network error. Try again.");
+  } finally {
+    setLoading(false); // 🔥 THIS FIXES MOBILE STUCK ISSUE
+  }
+};
 
   return (
     <div style={styles.container}>
