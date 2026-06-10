@@ -9,33 +9,36 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-const login = async () => {
-  setLoading(true);
-  setError("");
+  const login = async () => {
+    setLoading(true);
+    setError("");
 
-  try {
-    const res = await fetch("/api/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ seatNo, password }),
-    });
+    try {
+      const res = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          seatNo,
+          password,
+        }),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-if (data.success) {
-  window.location.href = data.folderUrl;
-  return;
-} else {
+      if (data.success) {
+        window.location.href = data.folderUrl;
+        return;
+      }
+
       setError(data.message || "Invalid credentials");
+    } catch {
+      setError("Network error. Try again.");
+    } finally {
+      setLoading(false);
     }
-  } catch (err) {
-    setError("Network error. Try again.");
-  } finally {
-    setLoading(false); // 🔥 THIS FIXES MOBILE STUCK ISSUE
-  }
-};
+  };
 
   return (
     <div style={styles.container}>
@@ -57,11 +60,19 @@ if (data.success) {
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <button style={styles.button} onClick={login} disabled={loading}>
+        <button
+          style={styles.button}
+          onClick={login}
+          disabled={loading}
+        >
           {loading ? "Checking..." : "Login"}
         </button>
 
-        {error && <p style={styles.error}>{error}</p>}
+        {error && (
+          <p style={styles.error}>
+            {error}
+          </p>
+        )}
       </div>
     </div>
   );
@@ -95,6 +106,7 @@ const styles: Record<string, CSSProperties> = {
     borderRadius: 10,
     border: "1px solid #ddd",
     fontSize: 16,
+    boxSizing: "border-box",
   },
   button: {
     width: "100%",
